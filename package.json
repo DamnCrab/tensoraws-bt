@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.5.2",
+    "@nuxtjs/robots": "^5.4.0",
+    "@pinia/nuxt": "^0.11.1",
     "eslint": "^9.31.0",
     "typescript": "^5.8.3",
     "vue-tsc": "^3.0.1",

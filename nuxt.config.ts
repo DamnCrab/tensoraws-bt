@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // https://nuxt.com/modules
-  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/image', '@nuxt/ui'],
-
+  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/image', '@nuxt/ui', '@pinia/nuxt', '@nuxtjs/robots'],
+  css: ['~/assets/css/main.css'],
   // https://devtools.nuxt.com
   devtools: { enabled: true },
 

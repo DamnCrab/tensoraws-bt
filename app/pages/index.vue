@@ -9,6 +9,9 @@ const color = useState('color', () => colors[Math.floor(Math.random() * colors.l
     <h1 :style="{ color }">
       {{ runtimeConfig.public.helloText }}
     </h1>
+    <div class="h-full">11</div>
+    <UPagination :page="5" :total="100" />
+    <UButton>Button</UButton>
     <NuxtLink
       to="/"
       external
