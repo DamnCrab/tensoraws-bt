@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   if (!session?.user || !['publisher', 'admin', 'super_admin'].includes(session.user.role)) {
     throw createError({
       statusCode: 403,
-      statusMessage: '权限不足'
+      message: '权限不足'
     })
   }
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   if (!formData) {
     throw createError({
       statusCode: 400,
-      statusMessage: '请上传种子文件'
+      message: '请上传种子文件'
     })
   }
 
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
   if (!torrentFile) {
     throw createError({
       statusCode: 400,
-      statusMessage: '种子文件不能为空'
+      message: '种子文件不能为空'
     })
   }
 
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,
-        statusMessage: 'Validation Error',
+        message: 'Validation Error',
         data: {
           errors: error.errors.map(err => ({
             field: err.path.join('.'),
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
     if (!torrentData.infoHash) {
       throw createError({
         statusCode: 400,
-        statusMessage: '无效的种子文件'
+        message: '无效的种子文件'
       })
     }
 
@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
     if (existingTorrent.length > 0) {
       throw createError({
         statusCode: 400,
-        statusMessage: '该种子已存在'
+        message: '该种子已存在'
       })
     }
 
@@ -168,7 +168,7 @@ export default defineEventHandler(async (event) => {
     console.error('Upload error:', error)
     throw createError({
       statusCode: 500,
-      statusMessage: error instanceof Error ? error.message : '上传失败'
+      message: error instanceof Error ? error.message : '上传失败'
     })
   }
 })

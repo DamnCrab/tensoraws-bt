@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import { eq, or } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
 import { validateBody } from '../../utils/validation'
-import { LoginRequestSchema } from '../../../shared/schemas'
+// import { LoginRequestSchema } from '#shared/schemas'
 
 export default defineEventHandler(async (event) => {
   // 使用 Zod 校验请求体

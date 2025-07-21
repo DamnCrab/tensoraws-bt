@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: '种子ID不能为空'
+      message: '种子ID不能为空'
     })
   }
 
@@ -25,14 +25,14 @@ export default defineEventHandler(async (event) => {
   if (!torrent) {
     throw createError({
       statusCode: 404,
-      statusMessage: '种子不存在或未审核'
+      message: '种子不存在或未审核'
     })
   }
 
   if (!torrent.r2Key) {
     throw createError({
       statusCode: 404,
-      statusMessage: '种子文件不存在'
+      message: '种子文件不存在'
     })
   }
 
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
     console.error('Failed to generate download URL:', error)
     throw createError({
       statusCode: 500,
-      statusMessage: '生成下载链接失败'
+      message: '生成下载链接失败'
     })
   }
 })

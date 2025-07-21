@@ -251,7 +251,7 @@
 import type { User, Category, PublishGroup, ApiResponse, Torrent } from '~/types'
 import { authApi, torrentApi, categoryApi, publishGroupApi, uploadApi } from '~/utils/api'
 import { formatFileSize } from '~/utils'
-import { TorrentUploadSchema } from '../../../shared/schemas'
+// import { TorrentUploadSchema } from '#shared/schemas'
 import { useFormState } from '~/composables/useValidation'
 
 // 页面元数据

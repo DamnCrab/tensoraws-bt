@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   if (!session?.user || session.user.role !== 'super_admin') {
     throw createError({
       statusCode: 403,
-      statusMessage: '权限不足，仅超级管理员可以管理过滤规则'
+      message: '权限不足，仅超级管理员可以管理过滤规则'
     })
   }
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     if (!name || !type || !pattern || !action) {
       throw createError({
         statusCode: 400,
-        statusMessage: '所有字段都不能为空'
+        message: '所有字段都不能为空'
       })
     }
 
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
       } catch (error) {
         throw createError({
           statusCode: 400,
-          statusMessage: '无效的正则表达式'
+          message: '无效的正则表达式'
         })
       }
     }
@@ -71,6 +71,6 @@ export default defineEventHandler(async (event) => {
 
   throw createError({
     statusCode: 405,
-    statusMessage: '方法不允许'
+    message: '方法不允许'
   })
 })

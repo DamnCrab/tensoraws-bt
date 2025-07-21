@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     if (!session || !session.user) {
       throw createError({
         statusCode: 401,
-        statusMessage: '未登录'
+        message: '未登录'
       })
     }
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     throw createError({
       statusCode: 401,
-      statusMessage: '获取用户信息失败'
+      message: '获取用户信息失败'
     })
   }
 })

@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (response.data.role !== 'admin') {
       throw createError({
         statusCode: 403,
-        statusMessage: '权限不足'
+        message: '权限不足'
       })
     }
   } catch (error) {

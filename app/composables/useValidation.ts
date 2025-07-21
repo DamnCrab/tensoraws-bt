@@ -7,21 +7,21 @@ interface FormError {
 }
 
 // 导入共享的校验定义
-import {
-  LoginRequestSchema,
-  RegisterRequestSchema,
-  UserProfileUpdateSchema,
-  TorrentUploadSchema,
-  TorrentUpdateSchema,
-  CategoryCreateSchema,
-  CategoryUpdateSchema,
-  CommentCreateSchema,
-  CommentUpdateSchema,
-  PublishGroupCreateSchema,
-  PublishGroupUpdateSchema,
-  FormValidator,
-  CommonValidators
-} from '../../shared/schemas'
+// import {
+//   LoginRequestSchema,
+//   RegisterRequestSchema,
+//   UserProfileUpdateSchema,
+//   TorrentUploadSchema,
+//   TorrentUpdateSchema,
+//   CategoryCreateSchema,
+//   CategoryUpdateSchema,
+//   CommentCreateSchema,
+//   CommentUpdateSchema,
+//   PublishGroupCreateSchema,
+//   PublishGroupUpdateSchema,
+//   FormValidator,
+//   CommonValidators
+// } from '../../shared/schemas'
 
 /**
  * 表单校验 composable

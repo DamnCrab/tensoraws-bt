@@ -2,7 +2,7 @@ import { z } from 'zod'
 import type { H3Event } from 'h3'
 
 // 从 shared 文件夹导入校验定义
-export * from '../../shared/schemas'
+// export * from '../../shared/schemas'
 
 // ==================== H3 校验工具函数 ====================
 

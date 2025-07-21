@@ -1,7 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../../database'
-import { validateBody, validateParams } from '../../../utils/validation'
-import { AdminTorrentUpdateSchema, IdParamsSchema } from '../../../../shared/schemas'
+import { createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
   // 检查管理员权限
@@ -9,7 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!session?.user || !['admin', 'super_admin'].includes(session.user.role)) {
     throw createError({
       statusCode: 403,
-      statusMessage: '权限不足'
+      message: '权限不足'
     })
   }
 
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
   if (!torrent) {
     throw createError({
       statusCode: 404,
-      statusMessage: '种子不存在'
+      message: '种子不存在'
     })
   }
 

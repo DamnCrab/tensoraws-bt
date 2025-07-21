@@ -1,7 +1,7 @@
 import { eq, desc, like, and, or, count, sql } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
 import { validateQuery } from '../../utils/validation'
-import { TorrentSearchParamsSchema } from '../../../shared/schemas'
+// import { TorrentSearchParamsSchema } from '#shared/schemas'
 
 export default defineEventHandler(async (event) => {
   // 使用 Zod 校验查询参数

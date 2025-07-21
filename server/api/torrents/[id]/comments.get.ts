@@ -1,7 +1,7 @@
 import { eq, desc, count } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../../database'
 import { validateParams, validateQuery } from '../../../utils/validation'
-import { IdParamsSchema, CommentQuerySchema } from '../../../../shared/schemas'
+// import { IdParamsSchema, CommentQuerySchema } from '#shared/schemas'
 
 export default defineEventHandler(async (event) => {
   // 校验路由参数

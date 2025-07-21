@@ -114,7 +114,7 @@ export default defineEventHandler(async (event) => {
   if (!info_hash || !peer_id || !port || left === undefined) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing required parameters'
+      message: 'Missing required parameters'
     })
   }
 
@@ -126,7 +126,7 @@ export default defineEventHandler(async (event) => {
   if (!isAllowed) {
     throw createError({
       statusCode: 403,
-      statusMessage: 'Client not allowed'
+      message: 'Client not allowed'
     })
   }
 
@@ -144,7 +144,7 @@ export default defineEventHandler(async (event) => {
   if (!torrent) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Torrent not found'
+      message: 'Torrent not found'
     })
   }
 
