@@ -1,16 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // https://nuxt.com/modules
-  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/image', '@nuxt/ui', '@pinia/nuxt', '@nuxtjs/robots'],
+  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/image', '@nuxt/ui', '@pinia/nuxt', 'nuxt-auth-utils', '@scalar/nuxt'],
   css: ['~/assets/css/main.css'],
   // https://devtools.nuxt.com
   devtools: { enabled: true },
 
+
   // Env variables - https://nuxt.com/docs/getting-started/configuration#environment-variables-and-private-tokens
   runtimeConfig: {
+    // Private keys (only available on server-side)
+    jwtSecret: process.env.NUXT_JWT_SECRET || 'your-secret-key',
     public: {
       // Can be overridden by NUXT_PUBLIC_HELLO_TEXT environment variable
-      helloText: 'Hello from the Edge 👋'
+      helloText: 'TensoRaws-BT',
+      siteName: 'TensoRaws-BT'
     }
   },
   // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
@@ -19,12 +23,31 @@ export default defineNuxtConfig({
 
   nitro: {
     experimental: {
-      openAPI: true
+      openAPI: true,
+      tasks: true
     }
+  },
+  scalar: {
+    darkMode: true,
+    hideModels: false,
+    metaData: {
+      title: 'API Documentation by Scalar',
+    },
+    // proxyUrl: 'https://proxy.scalar.com',
+    // searchHotKey: 'k',
+    showSidebar: true,
+    pathRouting: {
+      basePath: '/scalar',
+    },
+    // url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
   },
 
   // https://hub.nuxt.com/docs/getting-started/installation#options
-  hub: {},
+  hub: {
+    database: true,
+    blob: true,
+    kv: true
+  },
 
   // Development config
   eslint: {
