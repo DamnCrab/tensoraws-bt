@@ -1,6 +1,66 @@
 import { eq } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../../database'
 import { createError } from 'h3'
+import { validateParams, validateBody } from '../../../utils/validation'
+import { IdParamsSchema, AdminTorrentUpdateSchema } from '../../../../shared/schemas'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Admin', 'Torrents'],
+    summary: '更新种子信息',
+    description: '管理员更新指定种子的信息',
+    parameters: [
+      {
+        in: 'path',
+        name: 'id',
+        required: true,
+        schema: { type: 'integer' },
+        description: '种子ID'
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string', description: '种子标题' },
+              description: { type: 'string', description: '种子描述' },
+              categoryId: { type: 'integer', description: '分类ID' },
+              publishGroupId: { type: 'integer', description: '发布组ID' },
+              status: { 
+                type: 'string', 
+                enum: ['pending', 'approved', 'rejected'],
+                description: '种子状态' 
+              }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: '更新成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean' },
+                data: { type: 'object', description: '更新后的种子信息' },
+                message: { type: 'string' }
+              }
+            }
+          }
+        }
+      },
+      403: { description: '权限不足' },
+      404: { description: '种子不存在' }
+    },
+    security: [{ sessionAuth: [] }]
+  }
+})
 
 export default defineEventHandler(async (event) => {
   // 检查管理员权限

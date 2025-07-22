@@ -1,7 +1,133 @@
 import { eq, desc, like, and, or, count, sql } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
 import { validateQuery } from '../../utils/validation'
-// import { TorrentSearchParamsSchema } from '#shared/schemas'
+import { TorrentSearchParamsSchema } from '../../../shared/schemas'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Torrents'],
+    summary: '获取种子列表',
+    description: '分页获取种子列表，支持搜索、筛选和排序',
+    parameters: [
+      {
+        name: 'page',
+        in: 'query',
+        description: '页码',
+        schema: { type: 'integer', minimum: 1, default: 1 }
+      },
+      {
+        name: 'limit',
+        in: 'query',
+        description: '每页数量',
+        schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 }
+      },
+      {
+        name: 'category',
+        in: 'query',
+        description: '分类ID',
+        schema: { type: 'string' }
+      },
+      {
+        name: 'userId',
+        in: 'query',
+        description: '发布者ID',
+        schema: { type: 'integer' }
+      },
+      {
+        name: 'q',
+        in: 'query',
+        description: '搜索关键词',
+        schema: { type: 'string' }
+      },
+      {
+        name: 'sort',
+        in: 'query',
+        description: '排序方式',
+        schema: { 
+          type: 'string', 
+          enum: ['newest', 'oldest', 'seeders', 'size'],
+          default: 'newest'
+        }
+      },
+      {
+        name: 'status',
+        in: 'query',
+        description: '种子状态',
+        schema: { 
+          type: 'string', 
+          enum: ['pending', 'approved', 'rejected', 'all'],
+          default: 'approved'
+        }
+      }
+    ],
+    responses: {
+      200: {
+        description: '获取成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean' },
+                data: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'integer' },
+                      title: { type: 'string' },
+                      description: { type: 'string' },
+                      infoHash: { type: 'string' },
+                      size: { type: 'integer' },
+                      fileCount: { type: 'integer' },
+                      seeders: { type: 'integer' },
+                      leechers: { type: 'integer' },
+                      downloads: { type: 'integer' },
+                      createdAt: { type: 'string', format: 'date-time' },
+                      status: { type: 'string', enum: ['pending', 'approved', 'rejected'] },
+                      category: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'integer' },
+                          name: { type: 'string' },
+                          color: { type: 'string' }
+                        }
+                      },
+                      publisher: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'integer' },
+                          username: { type: 'string' }
+                        }
+                      },
+                      publishGroup: {
+                        type: 'object',
+                        nullable: true,
+                        properties: {
+                          id: { type: 'integer' },
+                          name: { type: 'string' }
+                        }
+                      }
+                    }
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: { type: 'integer' },
+                    limit: { type: 'integer' },
+                    total: { type: 'integer' },
+                    totalPages: { type: 'integer' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+})
 
 export default defineEventHandler(async (event) => {
   // 使用 Zod 校验查询参数

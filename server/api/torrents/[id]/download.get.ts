@@ -1,5 +1,53 @@
 import { eq, and } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../../database'
+import { createError } from 'h3'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Torrents'],
+    summary: '下载种子文件',
+    description: '获取种子文件的临时下载链接',
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        required: true,
+        description: '种子ID',
+        schema: { type: 'string' }
+      }
+    ],
+    responses: {
+      200: {
+        description: '获取下载链接成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                downloadUrl: { 
+                  type: 'string', 
+                  format: 'uri',
+                  description: '临时下载链接'
+                },
+                filename: { 
+                  type: 'string',
+                  description: '文件名'
+                },
+                expiresIn: { 
+                  type: 'integer',
+                  description: '链接有效期（秒）'
+                }
+              }
+            }
+          }
+        }
+      },
+      400: { description: '种子ID不能为空' },
+      404: { description: '种子不存在或未审核' },
+      500: { description: '生成下载链接失败' }
+    }
+  }
+})
 
 export default defineEventHandler(async (event) => {
   const { id } = getRouterParams(event)

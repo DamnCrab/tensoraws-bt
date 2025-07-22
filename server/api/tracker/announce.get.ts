@@ -1,6 +1,123 @@
 import { eq, and, gte, lt } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
-import { getRequestIP } from 'h3'
+import { getRequestIP, createError } from 'h3'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Tracker'],
+    summary: 'BitTorrent Tracker Announce',
+    description: 'BitTorrent 协议的 announce 端点，用于 peer 发现和统计',
+    parameters: [
+      {
+        name: 'info_hash',
+        in: 'query',
+        required: true,
+        description: '种子的 info hash',
+        schema: { type: 'string' }
+      },
+      {
+        name: 'peer_id',
+        in: 'query',
+        required: true,
+        description: '客户端的 peer ID',
+        schema: { type: 'string' }
+      },
+      {
+        name: 'port',
+        in: 'query',
+        required: true,
+        description: '客户端监听端口',
+        schema: { type: 'integer', minimum: 1, maximum: 65535 }
+      },
+      {
+        name: 'uploaded',
+        in: 'query',
+        description: '已上传字节数',
+        schema: { type: 'string', default: '0' }
+      },
+      {
+        name: 'downloaded',
+        in: 'query',
+        description: '已下载字节数',
+        schema: { type: 'string', default: '0' }
+      },
+      {
+        name: 'left',
+        in: 'query',
+        required: true,
+        description: '剩余下载字节数',
+        schema: { type: 'string' }
+      },
+      {
+        name: 'event',
+        in: 'query',
+        description: '事件类型',
+        schema: { 
+          type: 'string', 
+          enum: ['started', 'completed', 'stopped', 'empty'],
+          default: 'empty'
+        }
+      },
+      {
+        name: 'compact',
+        in: 'query',
+        description: '是否使用紧凑格式',
+        schema: { type: 'string', default: '1' }
+      },
+      {
+        name: 'numwant',
+        in: 'query',
+        description: '期望返回的 peer 数量',
+        schema: { type: 'string', default: '50' }
+      }
+    ],
+    responses: {
+      200: {
+        description: 'Announce 成功',
+        content: {
+          'text/plain': {
+            schema: {
+              type: 'object',
+              properties: {
+                interval: { 
+                  type: 'integer',
+                  description: 'announce 间隔（秒）'
+                },
+                'min interval': { 
+                  type: 'integer',
+                  description: '最小 announce 间隔（秒）'
+                },
+                complete: { 
+                  type: 'integer',
+                  description: 'seeders 数量'
+                },
+                incomplete: { 
+                  type: 'integer',
+                  description: 'leechers 数量'
+                },
+                peers: {
+                  type: 'array',
+                  description: 'peer 列表',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      'peer id': { type: 'string' },
+                      ip: { type: 'string' },
+                      port: { type: 'integer' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      400: { description: '缺少必需参数' },
+      403: { description: '客户端不被允许' },
+      404: { description: '种子不存在' }
+    }
+  }
+})
 
 // 客户端过滤函数
 async function checkClientFilter(peerId: string, ip: string, userAgent?: string): Promise<boolean> {

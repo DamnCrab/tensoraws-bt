@@ -33,23 +33,15 @@ export default defineNuxtConfig({
     nitro: {
         experimental: {
             openAPI: true,
-            tasks: true
+        },
+        openAPI: {
+            route: "/_docs/openapi.json",
         }
     },
-    // scalar: {
-    //     darkMode: true,
-    //     hideModels: false,
-    //     metaData: {
-    //         title: 'API Documentation by Scalar',
-    //     },
-    //     // proxyUrl: 'https://proxy.scalar.com',
-    //     // searchHotKey: 'k',
-    //     showSidebar: true,
-    //     pathRouting: {
-    //         basePath: '/scalar',
-    //     },
-    //     // url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
-    // },
+
+    scalar: {
+        url: '/_docs/openapi.json'
+    },
 
     // https://hub.nuxt.com/docs/getting-started/installation#options
     hub: {
@@ -68,3 +60,20 @@ export default defineNuxtConfig({
         }
     }
 })
+
+/**
+ * alias configuration for Nuxt 4
+ * 不应该在server中使用 / should not use in server
+ *
+ * {
+ *   "~": "/app",
+ *   "@": "/app",
+ *   "~~": "/",
+ *   "@@": "/",
+ *   "#shared": "/shared",
+ *   "assets": "/app/assets",
+ *   "public": "/app/public",
+ *   "#build": "/.nuxt",
+ *   "#internal/nuxt/paths": "/.nuxt/paths.mjs"
+ * }
+ */

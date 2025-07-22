@@ -2,6 +2,111 @@ import parseTorrent from 'parse-torrent'
 import { eq } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
 import { z } from 'zod'
+import { createError } from 'h3'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Torrents'],
+    summary: '上传种子文件',
+    description: '上传新的种子文件，需要发布者权限',
+    requestBody: {
+      required: true,
+      content: {
+        'multipart/form-data': {
+          schema: {
+            type: 'object',
+            required: ['torrent', 'title', 'categoryId'],
+            properties: {
+              torrent: {
+                type: 'string',
+                format: 'binary',
+                description: '种子文件'
+              },
+              title: {
+                type: 'string',
+                minLength: 1,
+                maxLength: 200,
+                description: '种子标题',
+                example: '电影名称 (2023) [1080p]'
+              },
+              description: {
+                type: 'string',
+                description: '种子描述',
+                example: '高清电影资源，包含中英字幕'
+              },
+              categoryId: {
+                type: 'string',
+                description: '分类ID',
+                example: '1'
+              },
+              publishGroupId: {
+                type: 'string',
+                description: '发布组ID（可选）',
+                example: '1'
+              }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: '上传成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean' },
+                data: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'integer' },
+                    title: { type: 'string' },
+                    infoHash: { type: 'string' },
+                    status: { type: 'string', enum: ['pending', 'approved'] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      400: { 
+        description: '请求错误',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                statusCode: { type: 'integer' },
+                message: { type: 'string' },
+                data: {
+                  type: 'object',
+                  properties: {
+                    errors: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          field: { type: 'string' },
+                          message: { type: 'string' }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      403: { description: '权限不足' },
+      500: { description: '上传失败' }
+    },
+    security: [{ sessionAuth: [] }]
+  }
+})
 
 // 定义上传表单数据校验
 const TorrentUploadFormSchema = z.object({

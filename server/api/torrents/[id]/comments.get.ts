@@ -1,7 +1,84 @@
 import { eq, desc, count } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../../database'
 import { validateParams, validateQuery } from '../../../utils/validation'
-// import { IdParamsSchema, CommentQuerySchema } from '#shared/schemas'
+import { createError } from 'h3'
+import { IdParamsSchema, CommentQuerySchema } from '../../../../shared/schemas'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Comments'],
+    summary: '获取种子评论',
+    description: '分页获取指定种子的评论列表',
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        required: true,
+        description: '种子ID',
+        schema: { type: 'integer' }
+      },
+      {
+        name: 'page',
+        in: 'query',
+        description: '页码',
+        schema: { type: 'integer', minimum: 1, default: 1 }
+      },
+      {
+        name: 'limit',
+        in: 'query',
+        description: '每页数量',
+        schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 }
+      }
+    ],
+    responses: {
+      200: {
+        description: '获取成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean' },
+                data: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'integer' },
+                      content: { type: 'string' },
+                      createdAt: { type: 'string', format: 'date-time' },
+                      updatedAt: { type: 'string', format: 'date-time' },
+                      user: {
+                        type: 'object',
+                        nullable: true,
+                        properties: {
+                          id: { type: 'integer' },
+                          username: { type: 'string' },
+                          avatar: { type: 'string', nullable: true },
+                          role: { type: 'string', enum: ['user', 'publisher', 'admin', 'super_admin'] }
+                        }
+                      }
+                    }
+                  }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: { type: 'integer' },
+                    limit: { type: 'integer' },
+                    total: { type: 'integer' },
+                    totalPages: { type: 'integer' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      404: { description: '种子不存在' }
+    }
+  }
+})
 
 export default defineEventHandler(async (event) => {
   // 校验路由参数

@@ -2,7 +2,77 @@ import bcrypt from 'bcryptjs'
 import { eq, or } from 'drizzle-orm'
 import { useDrizzle, schema } from '../../database'
 import { validateBody } from '../../utils/validation'
-// import { RegisterRequestSchema } from '#shared/schemas'
+import { createError } from 'h3'
+import { RegisterRequestSchema } from '../../../shared/schemas'
+
+defineRouteMeta({
+  openAPI: {
+    tags: ['Authentication'],
+    summary: '用户注册',
+    description: '新用户注册账户',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['username', 'email', 'password'],
+            properties: {
+              username: { 
+                type: 'string', 
+                description: '用户名',
+                minLength: 3,
+                maxLength: 20,
+                example: 'newuser'
+              },
+              email: { 
+                type: 'string', 
+                format: 'email',
+                description: '邮箱地址',
+                example: 'user@example.com'
+              },
+              password: { 
+                type: 'string', 
+                description: '密码',
+                minLength: 6,
+                example: 'password123'
+              }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: '注册成功',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                success: { type: 'boolean' },
+                data: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'integer' },
+                    username: { type: 'string' },
+                    email: { type: 'string' },
+                    role: { type: 'string', enum: ['user', 'admin', 'super_admin'] },
+                    isActive: { type: 'boolean' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    updatedAt: { type: 'string', format: 'date-time' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      400: { description: '用户名已存在或邮箱已被注册' },
+      500: { description: '用户创建失败' }
+    }
+  }
+})
 
 export default defineEventHandler(async (event) => {
   // 使用 Zod 校验请求体
